@@ -15,41 +15,45 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       formdata: {
-        username: "",
-        password: ""
+        username: '',
+        password: ''
       }
-    };
+    }
   },
   methods: {
-    handleLogin() {
-      this.$http.post("login",this.formdata).then(res => {
-        console.log(res)
-        const {
-          data: {
-            data,
-            meta: { msg, status }
-          }
-        } = res;
-        if (status === 200) {
-          this.$router.push({
-            name: "home"
-          });
-        } else {
-          this.$message.warning(msg);
+    async handleLogin () {
+      let res = await this.$http.post('login', this.formdata)
+      // console.log(res)
+      const {
+        data: {
+          meta: { msg, status },
+          data
         }
-      });
+      } = res
+      if (status === 200) {
+        localStorage.setItem('token', data.token)
+        this.$router.push({
+          name: 'home'
+        })
+      } else {
+        // this.$message.warning(msg)
+        this.$message({
+           message: msg,
+          type: 'warning'
+        })
+      }
     }
   }
-};
+}
 </script>
 
 <style>
 .wrap {
-  /* height: 100%; */
-  height: 938px;
+  height: 100%;
+  /* height: 938px; */
   background-color: #314052;
   display: flex;
   justify-content: center;

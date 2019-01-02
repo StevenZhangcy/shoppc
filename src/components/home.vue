@@ -35,7 +35,7 @@
           </el-submenu>
         </el-menu>
         <!-- 3 -->
-        <el-menu default-active="2" class="el-menu-vertical-demo">
+        <el-menu class="el-menu-vertical-demo">
           <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -52,7 +52,7 @@
           </el-submenu>
         </el-menu>
         <!-- 4 -->
-        <el-menu default-active="2" class="el-menu-vertical-demo">
+        <el-menu class="el-menu-vertical-demo">
           <el-submenu index="3">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -73,7 +73,7 @@
           </el-submenu>
         </el-menu>
         <!-- 5 -->
-        <el-menu default-active="2" class="el-menu-vertical-demo">
+        <el-menu class="el-menu-vertical-demo">
           <el-submenu index="4">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -86,7 +86,7 @@
           </el-submenu>
         </el-menu>
         <!-- 数据统计 -->
-        <el-menu default-active="2" class="el-menu-vertical-demo">
+        <el-menu  class="el-menu-vertical-demo">
           <el-submenu index="5">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -105,12 +105,13 @@
 </template>
 
 <script>
-export default {};
+export default {}
 </script>
 
 <style>
 .container {
-  height: 938px;
+  /* height: 938px; */
+  height: 100%;
 }
 .header {
   background-color: #b1becf;
