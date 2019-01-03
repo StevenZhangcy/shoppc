@@ -14,28 +14,28 @@
         </el-col>
         <el-col :span="2">
           <div class="grid-content bg-purple">
-            <a href="#">退出</a>
+            <a href="#" @click.prevent="logout()">退出</a>
           </div>
         </el-col>
       </el-row>
     </el-header>
     <el-container>
-      <el-aside class="asider" width="200px">
-        <!-- 2 -->
-        <el-menu default-active="2" class="el-menu-vertical-demo">
+      <el-aside class="asider" width="220px">
+        <!-- 用户管理导航 -->
+        <el-menu default-active="2" router class="el-menu-vertical-demo">
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>用户管理</span>
             </template>
-            <el-menu-item index="1-3">
+            <el-menu-item index="users">
               <i class="el-icon-location"></i>
-              <span>用户列表</span>
+              用户列表
             </el-menu-item>
           </el-submenu>
         </el-menu>
         <!-- 3 -->
-        <el-menu class="el-menu-vertical-demo">
+        <el-menu router class="el-menu-vertical-demo">
           <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -86,7 +86,7 @@
           </el-submenu>
         </el-menu>
         <!-- 数据统计 -->
-        <el-menu  class="el-menu-vertical-demo">
+        <el-menu class="el-menu-vertical-demo">
           <el-submenu index="5">
             <template slot="title">
               <i class="el-icon-location"></i>
@@ -99,13 +99,37 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main class="main">Main</el-main>
+      <el-main class="main">
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
-export default {}
+export default {
+  beforeCreate () {
+    // 判断是否有token 如果有就渲染下面页面 如果没有直接返回登录页面
+    if (!localStorage.getItem('token')) {
+      this.$router.push({
+        name: 'login'
+      })
+    }
+  },
+  data () {
+    return {}
+  },
+  methods: {
+    // 退出功能
+    logout () {
+      localStorage.clear()
+      this.$router.push({
+        name: 'login'
+      })
+      this.$message.success('退出成功')
+    }
+  }
+}
 </script>
 
 <style>
@@ -122,6 +146,6 @@ export default {}
   background-color: #fff;
 }
 .main {
-  background-color: rgb(167, 129, 135);
+  background-color:rgb(223, 220, 220);
 }
 </style>
