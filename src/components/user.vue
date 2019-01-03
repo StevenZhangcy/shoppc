@@ -8,8 +8,14 @@
       <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 引入搜索栏 -->
-    <el-input placeholder="请输入内容" v-model="query" class="input-with-select">
-      <el-button slot="append" icon="el-icon-search"></el-button>
+    <el-input
+      placeholder="请输入内容"
+      v-model="query"
+      @clear="clear()"
+      clearable
+      class="input-with-select"
+    >
+      <el-button slot="append" icon="el-icon-search" @click="checkUser()"></el-button>
     </el-input>
     <el-button type="success" @click="showAdd()">添加用户</el-button>
     <!-- 引入表格 -->
@@ -28,10 +34,18 @@
           <el-switch v-model="scope.row.my_status" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
         </template>
       </el-table-column>
+      <!-- 处理用户按钮 -->
       <el-table-column label="操作" width="300">
         <template slot-scope="scope">
           <el-row>
-            <el-button size="mini" plain type="primary" icon="el-icon-edit" circle  @click="showEdit(scope.row.id)"></el-button>
+            <el-button
+              size="mini"
+              plain
+              type="primary"
+              icon="el-icon-edit"
+              circle
+              @click="showEdit(scope.row.id)"
+            ></el-button>
             <el-button
               size="mini"
               plain
@@ -40,7 +54,7 @@
               circle
               @click="deleted(scope.row.id)"
             ></el-button>
-            <el-button size="mini" plain type="success" icon="el-icon-check" circle ></el-button>
+            <el-button size="mini" plain type="success" icon="el-icon-check" circle></el-button>
           </el-row>
         </template>
       </el-table-column>
@@ -100,7 +114,8 @@
 <script>
 export default {
   created() {
-    this.getUsers();
+    this.getUsers()
+    this.pagenum = 1
   },
   data() {
     return {
@@ -110,7 +125,7 @@ export default {
       tableData: [],
       total: -1,
       dialogFormVisibleAdd: false,
-      dialogFormVisibleEdit:false,
+      dialogFormVisibleEdit: false,
       form: {
         username: "",
         password: "",
@@ -121,14 +136,24 @@ export default {
     };
   },
   methods: {
+    clear() {
+      this.getUsers();
+    },
+    // 查询用户功能
+    checkUser() {
+      this.getUsers();
+    },
     // 编辑功能 显示编辑
-     async showEdit(id) {
-      this.dialogFormVisibleEdit = true
-      const res = await this.$http.get(`users/` + id)
-      console.log(res)
-      const {data,meta:{status}} = res.data
+    async showEdit(id) {
+      this.dialogFormVisibleEdit = true;
+      const res = await this.$http.get(`users/` + id);
+      console.log(res);
+      const {
+        data,
+        meta: { status }
+      } = res.data;
       if (status === 200) {
-        this.form = data
+        this.form = data;
       }
     },
     // 删除用户
@@ -177,6 +202,7 @@ export default {
     handleSizeChange(val) {
       this.pagesize = val;
       this.getUsers();
+      this.pagenum = 1;
       // console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
