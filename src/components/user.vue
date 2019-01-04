@@ -117,12 +117,12 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleEdit = false">取 消</el-button>
-        <el-button type="primary" @click="handleEdit()">确 定</el-button>
+        <el-button type="primary" @click="handleEdit(form.id)">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 角色管理 -->
     <el-dialog title="分配角色" :visible.sync="dialogFormVisibleRoles">
-      <el-form >
+      <el-form>
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <span>{{currentUsrname}}</span>
         </el-form-item>
@@ -143,12 +143,12 @@
 
 <script>
 export default {
-  created () {
-    this.getUsers()
+  created() {
+    this.getUsers();
   },
-  data () {
+  data() {
     return {
-      query: '',
+      query: "",
       pagenum: 1,
       pagesize: 2,
       tableData: [],
@@ -157,166 +157,185 @@ export default {
       dialogFormVisibleEdit: false,
       dialogFormVisibleRoles: false,
       form: {
-        username: '',
-        password: '',
-        mobile: '',
-        email: ''
+        username: "",
+        password: "",
+        mobile: "",
+        email: ""
       },
-      formLabelWidth: '120px',
+      formLabelWidth: "120px",
       currentRoleId: -1,
       roles: [],
-      currentUsrname: '',
+      currentUsrname: "",
       currentUserId: -1
-    }
+    };
   },
   methods: {
     // 处理角色显示
-    async showRoles (user) {
+    async showRoles(user) {
       // console.log(user)
       // 打开角色选项 要把用户信息传过来  包括id 和姓名
       // 然后把用户id和姓名储存在data中供视图使用
-      this.currentUsrname = user.username
-      this.currentUserId = user.id
-      this.dialogFormVisibleRoles = true
+      this.currentUsrname = user.username;
+      this.currentUserId = user.id;
+      this.dialogFormVisibleRoles = true;
       // 查询要渲染页面的角色列表信息 所有的一级信息 里面包含角色id
-      const res = await this.$http.get(`roles`)
-      const {data, meta: {status}} = res.data
+      const res = await this.$http.get(`roles`);
+      const {
+        data,
+        meta: { status }
+      } = res.data;
       if (status === 200) {
-        this.roles = data
+        this.roles = data;
       }
-      // 根据id查询用户  
+      // 根据id查询用户
       // 的角色id视图中有个逻辑  即 根据用户id查询出来的角色id=== 获取角色信息的角色id相互匹配
       // 在selection中就是默认显示label中的内容
-      const res1 = await this.$http.get(`users/` + user.id)
+      const res1 = await this.$http.get(`users/` + user.id);
       // console.log(res1)
       // 根据id获取角色id
-      this.currentRoleId = res1.data.data.rid
+      this.currentRoleId = res1.data.data.rid;
     },
     // 处理角色分配
-    async handleRoles (rid) {
-      const res = await this.$http.put(`users/${this.currentUserId}/role`, {rid: this.currentRoleId})
+    async handleRoles(rid) {
+      const res = await this.$http.put(`users/${this.currentUserId}/role`, {
+        rid: this.currentRoleId
+      });
       // console.log(res)
-      this.dialogFormVisibleRoles = false
-
+      this.dialogFormVisibleRoles = false;
     },
     // 修改用户状态
-    async editStatus (user) {
+    async editStatus(user) {
       // console.log(user)
       const res = await this.$http.put(
         `users/${user.id}/state/${user.mg_state}`
-      )
+      );
       // console.log(res)
       const {
         meta: { msg, status }
-      } = res.data
+      } = res.data;
       if (status === 200) {
-        this.$message.success(msg)
+        this.$message.success(msg);
       }
       // this.tableData = res.data
       // if
     },
     // 清空搜索框发送查询请求
-    clear () {
-      this.getUsers()
+    clear() {
+      this.getUsers();
     },
     // 查询用户功能
-    checkUser () {
-      this.getUsers()
+    checkUser() {
+      this.getUsers();
+    },
+    async handleEdit(id) {
+      //  console.log(id)
+      const res = await this.$http.put(`users/` + id, this.form);
+      // console.log(res)
+      const {
+        meta: { msg, status }
+      } = res.data;
+      if (status === 200) {
+        this.dialogFormVisibleEdit = false;
+        this.getUsers();
+        // this.$message.success(msg)
+      } else {
+        this.$message.success(msg);
+      }
     },
     // 编辑功能 显示编辑
-    async showEdit (id) {
-      this.dialogFormVisibleEdit = true
-      const res = await this.$http.get(`users/` + id)
+    async showEdit(id) {
+      this.dialogFormVisibleEdit = true;
+      const res = await this.$http.get(`users/` + id);
       // console.log(res)
       const {
         data,
         meta: { status }
-      } = res.data
+      } = res.data;
       if (status === 200) {
-        this.form = data
+        this.form = data;
       }
     },
     // 删除用户
-    deleted (id) {
-      this.$confirm('是否删除此用户?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+    deleted(id) {
+      this.$confirm("是否删除此用户?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(async () => {
-          const res = await this.$http.delete(`users/` + id)
+          const res = await this.$http.delete(`users/` + id);
           const {
             meta: { status }
-          } = res.data
+          } = res.data;
           if (status === 200) {
-            this.getUsers()
-            this.$message.success('删除成功!')
+            this.getUsers();
+            this.$message.success("删除成功!");
           }
         })
         .catch(() => {
-          this.$message.success('已取消删除')
-        })
+          this.$message.success("已取消删除");
+        });
     },
     // 添加用户
     // 显示添加页面
-    showAdd () {
-      this.form = {}
-      this.dialogFormVisibleAdd = true
+    showAdd() {
+      this.form = {};
+      this.dialogFormVisibleAdd = true;
     },
     // 处理添加请求
-    async handleAdd () {
-      const res = await this.$http.post(`users`, this.form)
+    async handleAdd() {
+      const res = await this.$http.post(`users`, this.form);
       // console.log(res)
       const {
         meta: { status, msg }
-      } = res.data
+      } = res.data;
       if (status === 201) {
-        this.dialogFormVisibleAdd = false
-        this.getUsers()
+        this.dialogFormVisibleAdd = false;
+        this.getUsers();
       } else {
-        this.$message.warning(msg)
+        this.$message.warning(msg);
       }
     },
     // 分页导航
     // 处理页面条数变化变化方法
-    handleSizeChange (val) {
-      this.pagesize = val
-      this.getUsers()
-      this.pagenum = 1
+    handleSizeChange(val) {
+      this.pagesize = val;
+      this.getUsers();
+      this.pagenum = 1;
       // console.log(`每页 ${val} 条`);
     },
-    handleCurrentChange (val) {
-      this.pagenum = val
-      this.getUsers()
-      this.pagenum = 1
+    handleCurrentChange(val) {
+      this.pagenum = val;
+      this.getUsers();
+      this.pagenum = 1;
 
       // console.log(`当前页: ${val}`);
     },
     //   查询用户列表
-    async getUsers () {
+    async getUsers() {
       // 设置公共请求 token
-      const AUTH_TOKEN = localStorage.getItem('token')
-      this.$http.defaults.headers.common['Authorization'] = AUTH_TOKEN
+      const AUTH_TOKEN = localStorage.getItem("token");
+      this.$http.defaults.headers.common["Authorization"] = AUTH_TOKEN;
       const res = await this.$http.get(
         `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${
           this.pagesize
         }`
-      )
+      );
       // console.log(res);
       const {
         data: { users, total },
         meta: { msg, status }
-      } = res.data
+      } = res.data;
       if (status === 200) {
-        this.total = total
-        this.tableData = users
-        this.$message.success(msg)
+        this.total = total;
+        this.tableData = users;
+        this.$message.success(msg);
       } else {
-        this.$message.warning(msg)
+        this.$message.warning(msg);
       }
     }
   }
-}
+};
 </script>
 <style>
 .input-with-select {
