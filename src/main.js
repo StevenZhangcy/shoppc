@@ -14,7 +14,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(Http)
 Vue.filter('forDate', function (v) {
-  return moment(v).format('YYYY-MM-DD');
+  return moment(v).format('YYYY-MM-DD')
 })
 /* eslint-disable no-new */
 new Vue({

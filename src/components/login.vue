@@ -41,7 +41,7 @@ export default {
       } else {
         // this.$message.warning(msg)
         this.$message({
-           message: msg,
+          message: msg,
           type: 'warning'
         })
       }

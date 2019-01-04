@@ -122,7 +122,7 @@
     </el-dialog>
     <!-- 角色管理 -->
     <el-dialog title="分配角色" :visible.sync="dialogFormVisibleRoles">
-      <el-form >
+      <el-form>
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <span>{{currentUsrname}}</span>
         </el-form-item>
@@ -180,11 +180,14 @@ export default {
       this.dialogFormVisibleRoles = true
       // 查询要渲染页面的角色列表信息 所有的一级信息 里面包含角色id
       const res = await this.$http.get(`roles`)
-      const {data, meta: {status}} = res.data
+      const {
+        data,
+        meta: { status }
+      } = res.data
       if (status === 200) {
         this.roles = data
       }
-      // 根据id查询用户  
+      // 根据id查询用户
       // 的角色id视图中有个逻辑  即 根据用户id查询出来的角色id=== 获取角色信息的角色id相互匹配
       // 在selection中就是默认显示label中的内容
       const res1 = await this.$http.get(`users/` + user.id)
@@ -194,10 +197,11 @@ export default {
     },
     // 处理角色分配
     async handleRoles (rid) {
-      const res = await this.$http.put(`users/${this.currentUserId}/role`, {rid: this.currentRoleId})
+      const res = await this.$http.put(`users/${this.currentUserId}/role`, {
+        rid: this.currentRoleId
+      })
       // console.log(res)
       this.dialogFormVisibleRoles = false
-
     },
     // 修改用户状态
     async editStatus (user) {
@@ -224,13 +228,20 @@ export default {
       this.getUsers()
     },
     // 处理编辑功能
-   async handleEdit(id) {
-    //  console.log(id)
-      const res = await this.$http.put (`users/` + id,this.form)
-      this.dialogFormVisibleEdit = false
-      this.getUsers()
-      console.log(res)
-
+    async handleEdit (id) {
+      //  console.log(id)
+      const res = await this.$http.put(`users/` + id, this.form)
+      // console.log(res)
+      const {
+        meta: { msg, status }
+      } = res.data
+      if (status === 200) {
+        this.dialogFormVisibleEdit = false
+        this.getUsers()
+        // this.$message.success(msg)
+      } else {
+        this.$message.success(msg)
+      }
     },
     // 编辑功能 显示编辑
     async showEdit (id) {
