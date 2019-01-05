@@ -316,8 +316,8 @@ export default {
     //   查询用户列表
     async getUsers () {
       // 设置公共请求 token
-      const AUTH_TOKEN = localStorage.getItem('token')
-      this.$http.defaults.headers.common['Authorization'] = AUTH_TOKEN
+      // const AUTH_TOKEN = localStorage.getItem('token')
+      // this.$http.defaults.headers.common['Authorization'] = AUTH_TOKEN
       const res = await this.$http.get(
         `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${
           this.pagesize
