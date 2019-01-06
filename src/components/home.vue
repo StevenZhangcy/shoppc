@@ -21,80 +21,24 @@
     </el-header>
     <el-container>
       <el-aside class="asider" width="220px">
+        <!-- 配置动态路由渲染配合登录 -->
+        <!-- 需要两层循环 -->
         <!-- 用户管理导航 -->
-        <el-menu default-active="2" router class="el-menu-vertical-demo">
+        <el-menu
+          v-for="(v,i) in meuns"
+          :key="i"
+          default-active="2"
+          router
+          class="el-menu-vertical-demo"
+        >
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
-              <span>用户管理</span>
+              <span>{{v.authName}}</span>
             </template>
-            <el-menu-item index="users">
+            <el-menu-item v-for="(v1,i) in v.children" :key="i" :index="v1.path">
               <i class="el-icon-location"></i>
-              用户列表
-            </el-menu-item>
-          </el-submenu>
-        </el-menu>
-        <!-- 3 -->
-        <el-menu router class="el-menu-vertical-demo">
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>权限管理</span>
-            </template>
-            <el-menu-item index="/roles">
-              <i class="el-icon-location"></i>
-              <span>角色列表</span>
-            </el-menu-item>
-            <el-menu-item index="/rights">
-              <i class="el-icon-location"></i>
-              <span>权限列表</span>
-            </el-menu-item>
-          </el-submenu>
-        </el-menu>
-        <!-- 4 -->
-        <el-menu class="el-menu-vertical-demo">
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>商品管理</span>
-            </template>
-            <el-menu-item index="1-3">
-              <i class="el-icon-location"></i>
-              <span>商品列表</span>
-            </el-menu-item>
-            <el-menu-item index="1-4">
-              <i class="el-icon-location"></i>
-              <span>分类参数</span>
-            </el-menu-item>
-            <el-menu-item index="1-5">
-              <i class="el-icon-location"></i>
-              <span>商品分类</span>
-            </el-menu-item>
-          </el-submenu>
-        </el-menu>
-        <!-- 5 -->
-        <el-menu class="el-menu-vertical-demo">
-          <el-submenu index="4">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>订单管理</span>
-            </template>
-            <el-menu-item index="1-3">
-              <i class="el-icon-location"></i>
-              <span>订单列表</span>
-            </el-menu-item>
-          </el-submenu>
-        </el-menu>
-        <!-- 数据统计 -->
-        <el-menu class="el-menu-vertical-demo">
-          <el-submenu index="5">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>数据统计</span>
-            </template>
-            <el-menu-item index="1-3">
-              <i class="el-icon-location"></i>
-              <span>数据报表</span>
+              {{v1.authName}}
             </el-menu-item>
           </el-submenu>
         </el-menu>
@@ -105,33 +49,42 @@
     </el-container>
   </el-container>
 </template>
-
 <script>
 export default {
-  beforeCreate () {
+  beforeCreate() {
     // 判断是否有token 如果有就渲染下面页面 如果没有直接返回登录页面
-    if (!localStorage.getItem('token')) {
-      this.$router.push({
-        name: 'login'
-      })
-    }
+    // if (!localStorage.getItem("token")) {
+    //   this.$router.push({
+    //     name: "login"
+    //   });
+    // }
   },
-  data () {
-    return {}
+  created() {
+    this.getMeuns();
+  },
+  data() {
+    return {
+      meuns: []
+    };
   },
   methods: {
+    // 获取侧边栏权限
+    async getMeuns() {
+      const res = await this.$http.get(`menus`);
+      this.meuns = res.data.data;
+      console.log(res);
+    },
     // 退出功能
-    logout () {
-      localStorage.clear()
+    logout() {
+      localStorage.clear();
       this.$router.push({
-        name: 'login'
-      })
-      this.$message.success('退出成功')
+        name: "login"
+      });
+      this.$message.success("退出成功");
     }
   }
-}
+};
 </script>
-
 <style>
 .container {
   /* height: 938px; */
@@ -146,6 +99,6 @@ export default {
   background-color: #fff;
 }
 .main {
-  background-color:rgb(223, 220, 220);
+  background-color: rgb(223, 220, 220);
 }
 </style>

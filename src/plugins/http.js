@@ -11,8 +11,9 @@ Http.install = function (Vue, options) {
     // console.log(config)
     // console.log(config.url)
     if (config.url !== 'login') {
-      const AUTH_TOKEN = localStorage.getItem('token')
-      axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
+      let AUTH_TOKEN = localStorage.getItem('token')
+      config.headers.Authorization = AUTH_TOKEN
+      // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN
     }
     return config
   }, function (error) {
